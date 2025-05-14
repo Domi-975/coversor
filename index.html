@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conversor de Monedas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 0 10px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    #resultado {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    #error {
+      color: red;
+      margin-bottom: 20px;
+    }
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Conversor de Monedas</h1>
+  <input type="number" id="monto" placeholder="Monto en Pesos Chilenos" />
+  <select id="moneda">
+    <option value="dolar">Dólar Estadounidense (USD)</option>
+    <option value="euro">Euro (EUR)</option>
+  </select>
+  <button id="convertir">Convertir</button>
+
+  <div id="resultado"></div>
+  <div id="error"></div>
+  <canvas id="grafico"></canvas>
+
+  <script>
+    const botonConvertir = document.getElementById('convertir');
+    const resultadoDiv = document.getElementById('resultado');
+    const errorDiv = document.getElementById('error');
+    const ctx = document.getElementById('grafico').getContext('2d');
+    let chartInstance = null;
+
+    botonConvertir.addEventListener('click', async () => {
+      const monto = parseFloat(document.getElementById('monto').value);
+      const moneda = document.getElementById('moneda').value;
+
+      resultadoDiv.textContent = '';
+      errorDiv.textContent = '';
+
+      if (!monto || monto <= 0) {
+        errorDiv.textContent = 'Por favor, ingresa un monto válido mayor a cero.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://mindicador.cl/api/${moneda}`);
+        if (!response.ok) throw new Error('No se pudieron obtener los datos de la moneda.');
+
+        const data = await response.json();
+        // La propiedad valor del primer elemento en serie es el valor más reciente
+        const valorActual = data.serie[0].valor;
+
+        // Calcular el monto convertido
+        const convertido = monto / valorActual;
+        resultadoDiv.textContent = `Valor actual: $${valorActual.toFixed(2)} CLP por ${moneda.toUpperCase()}. Monto convertido: ${convertido.toFixed(2)} ${moneda.toUpperCase()}`;
+
+        // Extraer últimos 10 días del historial y fechas
+        const ultimos10 = data.serie.slice(0, 10).reverse();
+        const labels = ultimos10.map(item => {
+          const fecha = new Date(item.fecha);
+          return fecha.toLocaleDateString();
+        });
+        const valores = ultimos10.map(item => item.valor);
+
+        // Si ya hay un gráfico previo, destruirlo para crear uno nuevo
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+
+        chartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: `Valor del ${moneda.toUpperCase()} - últimos 10 días`,
+              data: valores,
+              fill: false,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: false,
+                title: {
+                  display: true,
+                  text: 'Valor en CLP'
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Fecha'
+                }
+              }
+            }
+          }
+        });
+
+      } catch (error) {
+        errorDiv.textContent = 'Error: ' + error.message;
+      }
+    });
+  </script>
+</body>
+</html>

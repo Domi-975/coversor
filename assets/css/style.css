@@ -1,0 +1,108 @@
+
+    
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #d4af37 0%, #f9e79f 100%);
+      color: #3e2f01;
+      max-width: 420px;
+      margin: 30px auto;
+      padding: 20px 15px 40px 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
+      border-radius: 15px;
+      overflow-x: hidden; /* Evita desbordes horizontales */
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 3px rgba(80, 60, 3, 0.7);
+    }
+
+    /* Ajuste específico para input y select */
+    input, select {
+      width: 100%;
+      padding: 8px 12px; /* menor padding para hacer más compacto */
+      margin-bottom: 15px;
+      font-size: 1rem; /* tamaño de fuente un poco menor para ajustar */
+      border: 2px solid #b58d1f;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+      background: #fef9e7;
+      color: #3e2f01;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus {
+      border-color: #7a6008;
+      box-shadow: 0 0 8px rgba(122, 96, 8, 0.7);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 0;
+      background-color: #c49700;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 8px rgba(196, 151, 0, 0.7);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+    button:hover, button:focus {
+      background-color: #977600;
+      box-shadow: 0 6px 12px rgba(151, 118, 0, 0.8);
+      outline: none;
+    }
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 3px 6px rgba(151, 118, 0, 0.8);
+    }
+
+    #resultado {
+      font-weight: 600;
+      font-size: 1.2rem;
+      padding: 12px 15px;
+      border-radius: 10px;
+      background: rgba(255 255 255 / 0.9);
+      color: #4a3b00;
+      text-align: center;
+      box-shadow: inset 0 0 8px rgba(218, 183, 30, 0.8);
+      margin-bottom: 25px;
+      user-select: text;
+    }
+
+    #error {
+      color: #9c1c00;
+      background: #fbeaea;
+      border: 1px solid #b94a48;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 25px;
+      box-shadow: 0 0 8px rgba(156, 28, 0, 0.4);
+      user-select: none;
+    }
+
+    canvas {
+      width: 100% !important;
+      max-width: 100%;
+      height: 320px !important;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(172, 140, 25, 0.6);
+      background: #fef9e7;
+      padding: 10px;
+      margin-top: 10px;
+      user-select: none;
+      display: block;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
